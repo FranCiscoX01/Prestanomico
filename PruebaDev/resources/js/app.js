@@ -5,6 +5,12 @@
  */
 
 require('./bootstrap');
+import 'ant-design-vue/dist/antd.css'; // or 'ant-design-vue/dist/antd.less'
+import Vue from 'vue';
+import Antd from 'ant-design-vue';
+Vue.use(Antd);
+
+import axios from 'axios';
 
 window.Vue = require('vue');
 
@@ -20,6 +26,9 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+
+
+Vue.component('search-rfc-component', require('./components/SearchRFCComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
