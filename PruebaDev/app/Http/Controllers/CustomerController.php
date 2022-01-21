@@ -56,6 +56,11 @@ class CustomerController extends Controller
             return response()->json(['success' => false]);
 
         } else {
+            if ($exist_rfc->status_id == 3) {
+                return response()->json(['success' => false, 'message' => 'Oferta Aceptada!']);
+            } else if ($exist_rfc->status_id == 4) {
+                return response()->json(['success' => false, 'message' => 'Oferta Rechazada!']);
+            }
             return response()->json(['success' => true, 'rfc' => $exist_rfc->rfc]);
         }
     }

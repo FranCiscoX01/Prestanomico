@@ -85,6 +85,12 @@ export default {
                 console.log(res);
                 if(res.data.success) {
                     window.location.href = `/proceso/${res.data.rfc}`;
+                } else if (!res.data.success && res.data.message) {
+                    me.$notification.info({
+                        message: res.data.message,
+                        description: 'Podrás realizar una nueva solicitud de crédito dentro de un mes.',
+                        duration: 0,
+                    });
                 }
                 me.loading = false
             })
