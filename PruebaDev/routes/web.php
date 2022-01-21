@@ -17,5 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/proceso', 'CustomerController@index')->name('home');
+Route::get('/proceso/{rfc}', 'CustomerController@index')->name('home');
 Route::post('/salvar-registro', 'CustomerController@salvarRegistro');
+
+// formulario de datos de cliente
+Route::get('/cliente/datos/{rfc}', 'CustomerController@getDatosCliente');

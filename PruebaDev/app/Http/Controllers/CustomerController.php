@@ -50,13 +50,13 @@ class CustomerController extends Controller
             ]);
     
             if ($customer && $address && $loan) {
-                return response()->json(['success' => true]);
+                return response()->json(['success' => true, 'rfc' => $customer->rfc]);
             }
 
             return response()->json(['success' => false]);
 
         } else {
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'rfc' => $exist_rfc->rfc]);
         }
     }
 
@@ -66,9 +66,24 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(string $rfc)
     {
-        //
+        return view('proceso', ['rfc' => $rfc]);
+    }
+
+    public function getDatosCliente(string $rfc)
+    {
+        $data = [];
+        $customer = Customer::where('rfc', $rfc)->first();
+        $address = Address::where('customer_id', $customer->id)->first();
+        $loan = Loan::where('customer_id', $customer->id)->first();
+
+        $data['datos_cliente'] = $customer;
+        $data['datos_domicilio'] = $address;
+        $data['datos_credito'] = $loan;
+
+        // dd($data);
+        return response()->json($data);
     }
 
     /**

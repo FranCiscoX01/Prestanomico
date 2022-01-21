@@ -83,6 +83,9 @@ export default {
             })
             .then(res => {
                 console.log(res);
+                if(res.data.success) {
+                    window.location.href = `/proceso/${res.data.rfc}`;
+                }
                 me.loading = false
             })
             .catch(err => {
