@@ -76,14 +76,63 @@ class CustomerController extends Controller
         $data = [];
         $customer = Customer::where('rfc', $rfc)->first();
         $address = Address::where('customer_id', $customer->id)->first();
-        $loan = Loan::where('customer_id', $customer->id)->first();
+        // $loan = Loan::where('customer_id', $customer->id)->first();
 
         $data['datos_cliente'] = $customer;
         $data['datos_domicilio'] = $address;
+        // $data['datos_credito'] = $loan;
+
+        // dd($data);
+        return response()->json($data);
+    }
+
+    public function getDatosCredito(string $rfc)
+    {
+        $data = [];
+        $customer = Customer::where('rfc', $rfc)->first();
+        $loan = Loan::where('customer_id', $customer->id)->first();
+
+        $data['datos_cliente'] = $customer;
         $data['datos_credito'] = $loan;
 
         // dd($data);
         return response()->json($data);
+    }
+
+    public function salvarCambios(Request $request)
+    {
+        $customer = Customer::find($request->cliente['id']);
+        
+
+        if ($customer) {
+            $address = Address::where('customer_id', $customer->id)->first();
+            $address->calle = strtoupper($request->domicilio['calle']);
+            $address->no_exterior = strtoupper($request->domicilio['no_exterior']);
+            $address->no_interior = strtoupper($request->domicilio['no_interior']);
+            $address->colonia = strtoupper($request->domicilio['colonia']);
+            $address->municipio = strtoupper($request->domicilio['municipio']);
+            $address->estado = strtoupper($request->domicilio['estado']);
+            $address->cp = strtoupper($request->domicilio['cp']);
+            $address->status_id = 6;
+            
+            if ($address->save()) {
+                return response()->json(['success' => true]);
+            }
+        }
+
+        return response()->json(['success' => false]);
+    }
+
+    public function updateOferta(Request $request)
+    {
+        $customer = Customer::where('rfc', $request->rfc)->first();
+        $customer->status_id = $request->status;
+        
+        if ($customer->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
     }
 
     /**

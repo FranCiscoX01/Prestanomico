@@ -13,13 +13,20 @@
                         Continuar
                     </a-button>
                     <a-button
-                        v-if="current == steps.length - 1"
+                        v-if="current == steps.length - 1 && !this.aceptadaOferta"
                         type="primary"
-                        @click="$message.success('Processing complete!')"
+                        @click="ofertaAceptada()"
                     >
-                        Done
+                        Aceptar
                     </a-button>
-                    <a-button v-if="current > 0" style="margin-left: 8px" @click="prev">
+                    <a-button
+                        v-if="current == steps.length - 1 && !this.aceptadaOferta"
+                        type="danger"
+                        @click="ofertaRechazada()"
+                    >
+                        Rechazar
+                    </a-button>
+                    <a-button v-if="current > 0 && !this.aceptadaOferta" style="margin-left: 8px" @click="prev">
                         Regresar
                     </a-button>
                 </div>
@@ -43,14 +50,19 @@
 }
 </style>
 <script>
-import LoginUser from '../services/UserLoginService.vue';
 import CustomerData from './steps/CustomerDataComponent.vue'
+import LoanData from './steps/LoanDataComponent.vue'
+import ConfirmOffer from './steps/ConfirmOfferComponent.vue'
 
 export default {
     components: {
         'CustomerData': CustomerData,
+        'LoanData': LoanData,
+        'ConfirmOffer': ConfirmOffer,
     },
-    props: ['rfc'],
+    props: {
+        rfc: String,
+    },
     data() {
         return {
             current: 0,
@@ -64,25 +76,123 @@ export default {
                 },
                 {
                     title: 'Datos de Crédito',
-                    component: 'Second-content',
+                    component: 'LoanData',
+                    props: {
+                        rfc: this.rfc
+                    }
                 },
                 {
                     title: 'Oferta',
-                    component: 'Last-content',
+                    component: 'ConfirmOffer',
+                    props: {
+                        rfc: this.rfc
+                    }
                 },
             ],
+            aceptadaOferta: false,
         }
     },
+    beforeMount() {
+        this.getDatosRegistro()
+    },
     mounted() {
-        
+
     },
     methods: {
+        getDatosRegistro() {
+            let me = this;
+            axios.get('/cliente/datos/' + this.rfc)
+            .then((result) => {
+                console.log(result);
+                if (result.data.datos_cliente.status_id == 2) {
+                    me.current = 1;
+                }
+                if (result.data.datos_cliente.status_id == 3 || result.data.datos_cliente.status_id == 4) {
+                    me.current = 2;
+                    me.aceptadaOferta = true;
+                }
+                console.log(me.aceptadaOferta);
+            }).catch((err) => {
+                console.log(err);
+            });
+        },
         next() {
             this.current++;
+            console.log(this.current);
+            if(this.current == 1) {
+                this.ofertaVista()
+            }
         },
         prev() {
             this.current--;
+            console.log(this.current);
         },
+        ofertaVista() {
+            let me = this;
+            axios.post('/actualizar-oferta', {
+                rfc: me.rfc,
+                status: 2,
+            })
+            .then((result) => {
+                console.log(result);
+                if (result.data.success) {
+                    me.$message.success('Oferta vista.');
+                } else {
+                    me.$message.warning('Algo salio mal.');
+                    me.current--;
+                }
+            }).catch((err) => {
+                console.log(err);
+                me.$message.warning('Algo salio mal.');
+                me.current--;
+            });
+        },
+        ofertaAceptada() {
+            let me = this;
+            axios.post('/actualizar-oferta', {
+                rfc: me.rfc,
+                status: 3,
+            })
+            .then((result) => {
+                console.log(result);
+                if (result.data.success) {
+                    me.$message.success('Oferta Aceptada.');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                } else {
+                    me.$message.warning('Algo salio mal.');
+                    me.current--;
+                }
+            }).catch((err) => {
+                console.log(err);
+                me.$message.warning('Algo salio mal.');
+                me.current--;
+            });
+        },
+        ofertaRechazada() {
+            let me = this;
+            axios.post('/actualizar-oferta', {
+                rfc: me.rfc,
+                status: 4,
+            })
+            .then((result) => {
+                console.log(result);
+                if (result.data.success) {
+                    me.$message.error('Oferta Rechazada.');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                } else {
+                    me.$message.warning('Algo salio mal.');
+                    me.current--;
+                }
+            }).catch((err) => {
+                console.log(err);
+                me.$message.warning('Algo salio mal.');
+                me.current--;
+            });
+        }
     },
 }
 </script>
