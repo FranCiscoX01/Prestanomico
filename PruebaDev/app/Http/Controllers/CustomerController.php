@@ -57,9 +57,9 @@ class CustomerController extends Controller
 
         } else {
             if ($exist_rfc->status_id == 3) {
-                return response()->json(['success' => false, 'message' => 'Oferta Aceptada!']);
+                return response()->json(['success' => false, 'message' => 'Oferta Aceptada!', 'rfc' => $exist_rfc->rfc]);
             } else if ($exist_rfc->status_id == 4) {
-                return response()->json(['success' => false, 'message' => 'Oferta Rechazada!']);
+                return response()->json(['success' => false, 'message' => 'Oferta Rechazada!', 'rfc' => $exist_rfc->rfc]);
             }
             return response()->json(['success' => true, 'rfc' => $exist_rfc->rfc]);
         }
@@ -97,10 +97,14 @@ class CustomerController extends Controller
         $customer = Customer::where('rfc', $rfc)->first();
         $loan = Loan::where('customer_id', $customer->id)->first();
 
+        if ($customer->status_id == 3 || $customer->status_id == 4) {
+            $customer->nueva_fecha = date('Y-m-d', strtotime("+1 month", strtotime($customer->updated_at)));
+        }
+
         $data['datos_cliente'] = $customer;
         $data['datos_credito'] = $loan;
 
-        // dd($data);
+        // dd($customer);
         return response()->json($data);
     }
 

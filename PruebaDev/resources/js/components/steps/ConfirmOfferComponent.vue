@@ -7,7 +7,17 @@
                 sub-title="Estaremos contactandolo en estos días. Dentro de un mes podrá realizar otra solicitud de crédito."
             >
                 <template #extra>
-                    
+                    <div class="row mx-0">
+                        <div class="col-12 text-center">
+                            <h4>Faltan:</h4>
+                        </div>
+                        <div class="col-12 mt-2 mb-2">
+                            <Countdown :deadline="cliente.nueva_fecha"></Countdown>
+                        </div>
+                        <div class="col-12 text-center">
+                            <p>para poder realizar una nueva solicitud.</p>
+                        </div>
+                    </div>
                 </template>
             </a-result>
         </div>
@@ -20,7 +30,17 @@
                     <a-icon type="frown" theme="twoTone" />
                 </template>
                 <template #extra>
-                    
+                    <div class="row mx-0">
+                        <div class="col-12 text-center">
+                            <h4>Faltan:</h4>
+                        </div>
+                        <div class="col-12 mt-2 mb-2">
+                            <Countdown :deadline="cliente.nueva_fecha"></Countdown>
+                        </div>
+                        <div class="col-12 text-center">
+                            <p>para poder realizar una nueva solicitud.</p>
+                        </div>
+                    </div>
                 </template>
             </a-result>
         </div>
@@ -36,7 +56,7 @@
                             <h5>Monto</h5>
                         </div>
                         <div class="col-5 text-left">
-                            {{ formatterMoney(credito.monto) }}
+                            {{ formatterMoney(this.credito.monto) }}
                         </div>
                         <div class="col-md-4 col-6 offset-md-3 text-center">
                             <h5>Plazo</h5>
@@ -64,7 +84,10 @@
 </template>
 
 <script>
+import Countdown from 'vuejs-countdown'
+
 export default {
+    components: { Countdown },
     props: {
         rfc: String
     },
