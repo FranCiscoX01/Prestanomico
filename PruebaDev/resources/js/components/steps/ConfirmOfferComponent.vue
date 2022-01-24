@@ -1,6 +1,6 @@
 <template>
     <div class="row mx-0">
-        <div class="col-12" v-if="this.cliente.status_id == 3">
+        <div class="col-12" v-if="cliente.status_id == 3">
             <a-result
                 status="success"
                 title="Oferta de Crédito Aceptada!"
@@ -21,7 +21,7 @@
                 </template>
             </a-result>
         </div>
-        <div class="col-12" v-if="this.cliente.status_id == 4">
+        <div class="col-12" v-if="cliente.status_id == 4">
             <a-result 
                 title="Oferta Rechazada"
                 sub-title="La oferta fue rechazada, dentro de un mes podrá realizar otra solicitud de crédito."
@@ -44,10 +44,10 @@
                 </template>
             </a-result>
         </div>
-        <div class="col-12" v-if="this.cliente.status_id == 2">
+        <div class="col-12" v-if="cliente.status_id == 2">
             <a-result 
                 status="404" 
-                :title="'Hola ' + this.cliente.nombre + ' ' + this.cliente.apellido_paterno + ' ' + this.cliente.apellido_materno" 
+                :title="'Hola ' + cliente.nombre + ' ' + cliente.apellido_paterno + ' ' + cliente.apellido_materno" 
                 sub-title="Está de acuerdo con la oferta para proporcionarle el crédito?"
             >
                 <template #extra>
@@ -56,7 +56,7 @@
                             <h5>Monto</h5>
                         </div>
                         <div class="col-5 text-left">
-                            {{ formatterMoney(this.credito.monto) }}
+                            {{ formatterMoney(credito.monto) }}
                         </div>
                         <div class="col-md-4 col-6 offset-md-3 text-center">
                             <h5>Plazo</h5>

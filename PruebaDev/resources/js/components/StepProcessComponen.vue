@@ -111,6 +111,9 @@ export default {
                     me.current = 2;
                     me.aceptadaOferta = true;
                 }
+                if (result.data.datos_cliente.status_id == 1) {
+                    me.current = 0;
+                }
                 console.log(me.aceptadaOferta);
             }).catch((err) => {
                 console.log(err);
