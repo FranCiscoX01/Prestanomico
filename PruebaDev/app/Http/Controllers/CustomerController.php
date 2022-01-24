@@ -98,7 +98,7 @@ class CustomerController extends Controller
         $loan = Loan::where('customer_id', $customer->id)->first();
 
         if ($customer->status_id == 3 || $customer->status_id == 4) {
-            $tiempo_real = true; // esta variable sirve para usar el timpo real del pais o usar la fecha de prueba
+            $tiempo_real = false; // esta variable sirve para usar el timpo real del pais o usar la fecha de prueba
             $fecha_nueva_solicitud = strtotime("+1 month", strtotime($customer->updated_at));
             if ($tiempo_real) {
                 if (date('Y-m-d') >= $fecha_nueva_solicitud) {
